@@ -1,5 +1,5 @@
 function terraform () {
-    if [ -z $TERRAFORM_VERSION ]; then
+    if [ -z "$TERRAFORM_VERSION" ]; then
         echo TERRAFORM_VERSION must be set >&2
         return 1
     fi
@@ -21,7 +21,7 @@ function terraform () {
         -e TF_INPUT=0 \
         -e TF_CLI_ARGS \
         -e AWS_PROFILE -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -e AWS_REGION \
-        "hashicorp/terraform:$version" $tf_global_args $@
+        "hashicorp/terraform:$TERRAFORM_VERSION" $tf_global_args $@
 }
 
 function assert_terraform_state_exists () {
