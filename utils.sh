@@ -39,6 +39,48 @@ function assert_terraform_state_exists () {
     fi
 }
 
+function initialise_terraform_workspace {
+    local tfstate_bucket; tfstate_bucket="$1"
+    local tflocks_table; tflocks_table="$2"
+    local repo_name; repo_name="$3"
+    local workspace_name; workspace_name="$4"
+    local key; key="terraform.tfstate"
+
+    assert_terraform_state_exists "$tfstate_bucket" "$repo_name/$workspace_name/$key"
+    
+    terraform init -reconfigure \
+        -backend-config="bucket=$tfstate_bucket" \
+        -backend-config="dynamodb_table=$tflocks_table" \
+        -backend-config="workspace_key_prefix=$repo_name"
+        -backend-config="key=$key"
+    
+    local exists; exists=
+    for workspace in $(terraform workspace list | xargs); do
+        if [ "$workspace" == "$workspace_name" ]; then
+            exists=1
+        fi
+    done
+    if [ -n "$exists" ]; then
+        terraform workspace select "$workspace_name"
+    else
+        terraform_workspace new "$workspace_name"
+    fi
+}
+
+function initialise_terraform_dev {
+    local tfstate_bucket; tfstate_bucket="$1"
+    local tflocks_table; tflocks_table="$2"
+    local repo_name; repo_name="$3"
+    local key; key="$repo_name/dev.tfstate"
+
+    assert_terraform_state_exists "$tfstate_bucket" "$key"
+    
+    terraform init -reconfigure \
+        -backend-config="bucket=$tfstate_bucket" \
+        -backend-config="dynamodb_table=$tflocks_table" \
+        -backend-config="key=$key"
+}
+
 function checkov_scan () {
     local ttyopt
     if [ -t 0 ] ; then
