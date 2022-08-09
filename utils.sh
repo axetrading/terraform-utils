@@ -54,14 +54,7 @@ function initialise_terraform_workspace {
         -backend-config="workspace_key_prefix=$repo_name" \
         -backend-config="key=$key"
     
-    set +e
-    local status
-    terraform workspace select "$workspace_name"
-    status=$?
-    set -e
-    if [ "$status" -ne "0" ]; then
-        terraform workspace new "$workspace_name"
-    fi
+    terraform workspace select "$workspace_name" || terraform workspace new "$workspace_name"
 }
 
 function initialise_terraform_dev {
