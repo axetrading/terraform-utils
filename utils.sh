@@ -63,7 +63,7 @@ function initialise_terraform_workspace {
     if [ -n "$exists" ]; then
         terraform workspace select "$workspace_name"
     else
-        terraform_workspace new "$workspace_name"
+        terraform workspace new "$workspace_name"
     fi
 }
 
