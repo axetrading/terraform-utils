@@ -51,7 +51,7 @@ function initialise_terraform_workspace {
     terraform init -reconfigure \
         -backend-config="bucket=$tfstate_bucket" \
         -backend-config="dynamodb_table=$tflocks_table" \
-        -backend-config="workspace_key_prefix=$repo_name"
+        -backend-config="workspace_key_prefix=$repo_name" \
         -backend-config="key=$key"
     
     local exists; exists=
