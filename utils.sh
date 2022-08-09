@@ -54,15 +54,12 @@ function initialise_terraform_workspace {
         -backend-config="workspace_key_prefix=$repo_name" \
         -backend-config="key=$key"
     
-    local exists; exists=
-    for workspace in $(terraform workspace list | xargs); do
-        if [ "$workspace" == "$workspace_name" ]; then
-            exists=1
-        fi
-    done
-    if [ -n "$exists" ]; then
-        terraform workspace select "$workspace_name"
-    else
+    set +e
+    local status
+    terraform workspace select "$workspace_name"
+    status=$?
+    set -e
+    if [ "$status" -ne "0" ]; then
         terraform workspace new "$workspace_name"
     fi
 }
