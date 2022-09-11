@@ -12,15 +12,23 @@ function terraform () {
     local tf_global_args
     if [ -n "$TF_CLI_CHDIR" ]; then
         tf_global_args="-chdir=$TF_CLI_CHDIR"
-    fi  
+    fi
+
+    local tf_dev_modules_folder_mapping
+    if [ -n "$TF_DEV_MODS_DIR" ]; then
+        echo "Mapping '$TF_DEV_MODS_DIR' (\$TF_DEV_MODS_DIR) to /terraform-dev-mods" >&2
+        tf_dev_modules_folder_mapping="-v $TF_DEV_MODS_DIR:/terraform-dev-mods"
+    fi
 
     docker run -i $ttyopt \
         --rm -w "$PWD" -v "$PWD:$PWD" \
         -v ~/.aws:/root/.aws \
+        $tf_dev_modules_folder_mapping \
         -e TF_IN_AUTOMATION=true \
         -e TF_INPUT=0 \
         -e TF_CLI_ARGS \
         -e AWS_PROFILE -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -e AWS_REGION \
+        -e GITHUB_TOKEN \
         "hashicorp/terraform:$TERRAFORM_VERSION" $tf_global_args $@
 }
 
