@@ -28,7 +28,7 @@ function terraform () {
         -e TF_INPUT=0 \
         -e TF_CLI_ARGS \
         -e AWS_PROFILE -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -e AWS_REGION \
-        -e GITHUB_TOKEN \
+        -e GITHUB_TOKEN -e GITHUB_OWNER \
         "hashicorp/terraform:$TERRAFORM_VERSION" $tf_global_args $@
 }
 
