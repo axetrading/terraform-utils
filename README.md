@@ -1,18 +1,6 @@
 # terraform-utils
 
-simple functions for dealing with Terraform
-
-## add subtree (install)
-
-```
-git subtree add --prefix terraform-utils https://github.com/axetrading/terraform-utils main --squash
-```
-
-## update subtree (update)
-
-```
-git subtree pull --prefix terraform-utils https://github.com/axetrading/terraform-utils main --squash
-```
+simple functions for dealing with Terraform - for installation and update see the end of this README
 
 ## environment variables (config)
 
@@ -56,3 +44,16 @@ resources).
 ### checkov_scan
 
 Run checkov against Terraform config.
+
+## add subtree (install)
+
+```
+git subtree add --prefix terraform-utils https://github.com/axetrading/terraform-utils main --squash
+```
+
+## update subtree (update)
+
+```
+git subtree pull --prefix terraform-utils https://github.com/axetrading/terraform-utils main --squash
+```
+
