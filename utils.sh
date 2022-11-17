@@ -1,7 +1,10 @@
 function terraform () {
-    if [ -z "$TERRAFORM_VERSION" ]; then
-        echo TERRAFORM_VERSION must be set >&2
-        return 1
+    if [ -z "$TERRAFORM_IMAGE" ]; then
+        if [ -z "$TERRAFORM_VERSION" ]; then
+            echo TERRAFORM_IMAGE or TERRAFORM_VERSION must be set >&2
+            return 1
+        fi
+        TERRAFORM_IMAGE="hashicorp/terraform:$TERRAFORM_VERSION"
     fi
 
     local ttyopt
@@ -29,7 +32,7 @@ function terraform () {
         -e TF_CLI_ARGS \
         -e AWS_PROFILE -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -e AWS_REGION \
         -e GITHUB_TOKEN -e GITHUB_OWNER \
-        "hashicorp/terraform:$TERRAFORM_VERSION" $tf_global_args $@
+        "$TERRAFORM_IMAGE" $tf_global_args $@
 }
 
 function assert_terraform_state_exists () {
