@@ -48,12 +48,25 @@ Run checkov against Terraform config.
 ## add subtree (install)
 
 ```
-git subtree add --prefix terraform-utils https://github.com/axetrading/terraform-utils main --squash
+git subtree add --prefix terraform/utils https://github.com/axetrading/terraform-utils main --squash
 ```
 
 ## update subtree (update)
 
 ```
-git subtree pull --prefix terraform-utils https://github.com/axetrading/terraform-utils main --squash
+git subtree pull --prefix terraform/utils https://github.com/axetrading/terraform-utils main --squash
 ```
+
+## Note
+
+Use used to recommend adding the subtree at `terraform-utils` rather than `terraform/utils`, but this looked
+a bit messy. If you have such a repo, run the following commands to move it:
+
+```
+git mv terraform-utils terraform/utils
+git commit -m 'tidy away utils' terraform-utils terraform/utils
+git subtree split --rejoin --prefix=terraform/utils HEAD
+```
+
+Following this the update command above should work again.
 
