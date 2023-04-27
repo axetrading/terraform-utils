@@ -15,7 +15,7 @@ function initialise_terraform() {
     local tflocks_table="$3"
     local repo_name="$4"
     local workspace_name="$5"
-    local key="$repo_name/${workspace_name:-dev}.tfstate"
+    local key="$repo_name/${workspace_name}/terraform.tfstate"
 
     local tf_global_args=""
     [ -z "$TF_CLI_CHDIR" ] || tf_global_args="-chdir=$TF_CLI_CHDIR"
@@ -35,8 +35,4 @@ function initialise_terraform() {
 
 function initialise_terraform_workspace() {
     initialise_terraform "workspace" "$@"
-}
-
-function initialise_terraform_dev() {
-    initialise_terraform "dev" "$@"
 }
