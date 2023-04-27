@@ -26,12 +26,13 @@ function initialise_terraform() {
         -backend-config="bucket=$tfstate_bucket" \
         -backend-config="dynamodb_table=$tflocks_table" \
         -backend-config="key=$key" \
-        $([ "$cmd" = "workspace" ] && echo "-backend-config=\"workspace_key_prefix=$repo_name\"")
+        $([ "$cmd" = "workspace" ] && echo "-backend-config=workspace_key_prefix=$repo_name")
 
     [ "$cmd" = "workspace" ] && {
         terraform $tf_global_args workspace select "$workspace_name" || terraform $tf_global_args workspace new "$workspace_name"
     }
 }
+
 
 function initialise_terraform_workspace() {
     initialise_terraform "workspace" "$@"
