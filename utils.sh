@@ -92,3 +92,25 @@ function checkov_scan () {
         --rm -w "$PWD" -v "$PWD:$PWD" \
         "bridgecrew/checkov" $@
 }
+
+function setup_local_roles () {
+    echo "Assuming BUILD_ROLE_ARN=$BUILD_ROLE_ARN..." >&2
+    local response; response="$(aws sts assume-role \
+        --role-arn "$BUILD_ROLE_ARN" \
+        --role-session-name "$REPO_NAME.$WORKSPACE.action.local" \
+        --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \
+        --output text \
+    || echo failed)"
+    if [ "$response" == "failed" ]; then
+        echo >&2
+        echo error assuming role - continuing with existing credentials... >&2
+        echo >&2
+    else
+        export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" $(echo "$response"))
+    fi
+    export ASSUME_ROLE_ARN="$(echo "$BUILD_ENVS" | jq -r ".[\"$WORKSPACE\"].role_arn")"
+    if [ "$ASSUME_ROLE_ARN" == "null" ]; then
+        echo "workspace $WORKSPACE not in \$BUILD_ENVS" >&2
+        exit 1
+    fi
+}
