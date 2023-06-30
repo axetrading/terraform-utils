@@ -41,6 +41,14 @@ As with `initialise_terraform_workspace` it does initialisation and backend conf
 consistent conventions are applied (workspaces aren't used since there is only one environment for these
 resources).
 
+### setup_local_roles
+
+When running locally the `BUILD_ROLE_ARN` environment variable should be set to match the role that
+will be present in the pipeline. If you have permission then it will cause the same role to be
+assumed so that the behaviour is the same as in the pipeline. It also causes the environment
+specific `ASSUME_ROLE` to be set from `BUILD_ENVS` according to the value of `WORKSPACE`, in
+order to emulate the behaviour in the pipeline.
+
 ### checkov_scan
 
 Run checkov against Terraform config.
