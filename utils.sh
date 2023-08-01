@@ -23,9 +23,12 @@ function terraform () {
         tf_dev_modules_folder_mapping="-v $TF_DEV_MODS_DIR:/terraform-dev-mods"
     fi
 
+    mkdir -p .terraform-plugin-cache
     docker run -i $ttyopt \
         --rm -w "$PWD" -v "$PWD:$PWD" \
-        -v ~/.aws:/root/.aws \
+        -v ~/.aws:/.aws \
+        -u "$UID:$GID" \
+        -e TF_PLUGIN_CACHE_DIR="$PWD/.terraform-plugin-cache" \
         $tf_dev_modules_folder_mapping \
         -e TF_IN_AUTOMATION=true \
         -e TF_INPUT=0 \
